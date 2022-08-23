@@ -12,8 +12,6 @@ import static com.codeborne.selenide.Selenide.webdriver;
 import static com.codeborne.selenide.WebDriverConditions.url;
 
 public class MainPage {
-    private final String mainPage = "https://stellarburgers.nomoreparties.site/";
-
     //Локатор кнопки "Войти в аккаунт"
     @FindBy(how = How.XPATH, using = "//button[@class='button_button__33qZ0 button_button_type_primary__1O7Bx button_button_size_large__G21Vg']")
     private SelenideElement enterInAccountButton;
@@ -74,8 +72,9 @@ public class MainPage {
         fillingSection.shouldBe(Condition.visible);
     }
 
-    @Step("Проверка, что Вы на главной странице и виден блок Соберите бургер")
+    @Step("Проверка, что Вы находитесь на главной странице")
     public void mainPageIsVisible() {
+        String mainPage = "https://stellarburgers.nomoreparties.site/";
         webdriver().shouldHave(url(mainPage));
     }
 

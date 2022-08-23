@@ -4,33 +4,42 @@ import com.github.javafaker.Faker;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import site.nomoreparties.stellarburgers.*;
 
 import static com.codeborne.selenide.Selenide.*;
 
 public class UserTransitionsTests {
-    Faker faker = new Faker();
-    private String email = faker.internet().emailAddress();
-    private String password = faker.internet().password(6, 9);
-    private String name = faker.name().firstName();
-    private String accessToken;
-    private UserBaseSteps userBaseSteps;
-    ValidatableResponse response;
+    static Faker faker = new Faker();
+    private static String email = faker.internet().emailAddress();
+    private static String password = faker.internet().password(6, 9);
+    private static String name = faker.name().firstName();
+    private static String accessToken;
+    private static UserBaseSteps userBaseSteps;
+    static ValidatableResponse response;
     AuthorizationPage authorizationPage;
     SiteHeaders siteHeaders;
     MainPage mainPage;
     AccountProfilePage accountProfilePage;
+
+    @BeforeClass
+    public static void beforeClass() {
+        userBaseSteps = new UserBaseSteps();
+        userBaseSteps.userCreationAndRegistration(email, password, name);
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        response = userBaseSteps.userAuthorization(email, password);
+        accessToken = response.extract().body().path("accessToken");
+        userBaseSteps.deleteUser(accessToken);
+    }
 
     @Before
     public void setUp() {
         //Для проверки в браузере Edge
         /*Configuration.browser = "edge";
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\rvvolkov1\\Documents\\Yap\\WebDriver\\bin\\msedgedriver.exe");*/
-        userBaseSteps = new UserBaseSteps();
-        userBaseSteps.userCreationAndRegistration(email, password, name);
         Configuration.startMaximized = true;
         mainPage = open("https://stellarburgers.nomoreparties.site", MainPage.class);
         authorizationPage = page(AuthorizationPage.class);
@@ -49,9 +58,6 @@ public class UserTransitionsTests {
         accountProfilePage.logOutButtonClick();
         authorizationPage.loginPageIsVisible();
         Selenide.closeWebDriver();
-        response = userBaseSteps.userAuthorization(email, password);
-        accessToken = response.extract().body().path("accessToken");
-        userBaseSteps.deleteUser(accessToken);
     }
 
     @Test
