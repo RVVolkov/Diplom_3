@@ -6,6 +6,8 @@ import io.qameta.allure.Step;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
+import java.time.Duration;
+
 import static com.codeborne.selenide.Selenide.webdriver;
 import static com.codeborne.selenide.WebDriverConditions.url;
 
@@ -41,6 +43,7 @@ public class MainPage {
 
     @Step("Клик по вкладке Булки")
     public void bunTabClick() {
+        bunTab.shouldBe(Condition.enabled, Duration.ofSeconds(3));
         bunTab.click();
     }
 
@@ -51,6 +54,7 @@ public class MainPage {
 
     @Step("Клик по вкладке Соусы")
     public void sauceTabClick() {
+        sauceTab.shouldBe(Condition.enabled, Duration.ofSeconds(3));
         sauceTab.click();
     }
 
@@ -61,6 +65,7 @@ public class MainPage {
 
     @Step("Клик по вкладке Начинки")
     public void fillingTabClick() {
+        fillingTab.shouldBe(Condition.enabled, Duration.ofSeconds(3));
         fillingTab.click();
     }
 
